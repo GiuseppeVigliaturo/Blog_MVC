@@ -48,7 +48,7 @@
 
     <main role="main" class="container">
 
-        <h1><?= $this->name?></h1>
+        <h1><?= $this->content?></h1>
 
     </main><!-- /.container -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

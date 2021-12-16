@@ -10,4 +10,5 @@ require_once __DIR__."/../app/Controllers/PostController.php";
 
 $controller = new App\Controllers\PostController();
 
+$controller->show(1);
 $controller->display();

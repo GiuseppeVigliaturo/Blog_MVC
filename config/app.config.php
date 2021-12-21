@@ -3,9 +3,11 @@ return [
     'routes' =>
     [
         'GET' => [
-            '' => 'PostController@getPosts',
-
+            '' => 'App\Controllers\PostController@getPosts',
+            'posts' => 'App\Controllers\PostController@getPosts',
             'post/create' => 'PostController@create',
+
+
         ]
     ]
 ];

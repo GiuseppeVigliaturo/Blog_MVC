@@ -1,5 +1,5 @@
 <?php
-function view($view, $data)
+function view($view, array $data)
 {
     extract($data);
     ob_start();
@@ -7,4 +7,8 @@ function view($view, $data)
     $data = ob_get_contents();
     ob_end_clean();
     return $data;
+}
+function redirect($url = '/')
+{
+    header("Location:$url");
 }

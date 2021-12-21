@@ -19,7 +19,7 @@ try {
 
     $conn = DbFactory::create($data)->getConn();
     $controller = new PostController($conn);
-    $controller->process();
+    $controller->dispatch();
     $controller->display();
 } catch (PDOException $e) {
     die($e->getMessage());

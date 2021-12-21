@@ -8,29 +8,61 @@ use PDO;
 class PostController
 {
     protected $layout = 'layout/index.tpl.php';
-    public $content;
+    public $content = 'Hidran Arias';
     protected $conn;
     protected $Post;
+
     public function __construct(PDO $conn)
     {
         $this->conn = $conn;
         $this->Post = new Post($conn);
     }
 
-    public function process()
+    public function dispatch()
     {
         $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $url = trim($url, '/');
         $tokens = explode('/', $url);
-
+        $action = $tokens[0];
+        $token2 = $tokens[1] ?? '';
         switch ($tokens[0]) {
             case 'posts':
-                $this->content = call_user_func([$this, 'getPosts']);
+            case '':
+            case 'home':
+                $this->content = $this->getPosts();
                 break;
             case 'post':
                 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-                    $this->content = call_user_func([$this, 'show'], $tokens[1]);
+                    if ($token2) {
+                        if (is_numeric($token2)) {
+
+                            $this->content = $this->show($token2);
+                        } else {
+                            if (method_exists($this, $token2)) {
+                                $this->content = $this->$token2();
+                            } else {
+                                $this->content = 'Method not found';
+                            }
+                        }
+                    } else {
+                        $this->content = 'Method not found';
+                    }
                     break;
+                } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    if ($token2) {
+                        if (is_numeric($token2)) {
+
+                            // $this->content = $this->update($token2);
+                        } else {
+                            if (method_exists($this, $token2)) {
+                                $this->content = $this->$token2();
+                            } else {
+                                $this->content = 'Method not found';
+                            }
+                        }
+                    } else {
+                        $this->content = 'Method not found';
+                    }
                 }
         }
     }
@@ -42,23 +74,35 @@ class PostController
     {
         require $this->layout;
     }
+
     public function getPosts()
     {
         $posts = $this->Post->all();
-        //con compact passiamo un array di posts che sarebbe la varabile $posts = $this->Post->all();
-        //Questo perchè viene ciclata nella view
         return view('posts', compact('posts'));
     }
+
     /**
      * @return string
      */
     public function show(int $postid)
     {
-        $message = ' this is a post message';
-        ob_start();
-        require_once __DIR__ . '/../views/post.tpl.php';
-        $content = ob_get_contents();
-        ob_end_clean();
-        return $content;
+        $post = $this->Post->find($postid);
+        return view('post', compact('post'));
+    }
+    /**
+     * @return string
+     */
+    public function create()
+    {
+
+        return view('newpost',[]);
+    }
+    /**
+     * @return string
+     */
+    public function save()
+    {
+
+        $this->Post->save($_POST);
     }
 }

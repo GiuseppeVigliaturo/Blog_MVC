@@ -34,7 +34,7 @@ class Router
         $method = $_SERVER['REQUEST_METHOD'];
 
         if ( array_key_exists($method, $this->routes) && array_key_exists($url, $this->routes[$method])) {
-            $this->route($this->routes[$method][$url]);
+            return $this->route($this->routes[$method][$url]);
         } else {
             throw new Exception('Method not found');
         }
@@ -48,6 +48,14 @@ class Router
             $controller = $tokens[0];
             $method = $tokens[1];
             $class = new $controller($this->conn);
+
+            if (method_exists($class, $method)) {
+
+                $class->$method();
+                return $class;
+            } else {
+                throw new Exception('Metodo ' . $method . ' non trovato nella class ' . $controller);
+            }
         } catch (Exception $e) {
             die($e->getMessage());
         }

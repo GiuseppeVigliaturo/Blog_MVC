@@ -8,7 +8,7 @@ use PDO;
 class PostController
 {
     protected $layout = 'layout/index.tpl.php';
-    public $content = 'Hidran Arias';
+    public $content = 'Giuseppe Vigliaturo';
     protected $conn;
     protected $Post;
 
@@ -31,7 +31,7 @@ class PostController
     public function getPosts()
     {
         $posts = $this->Post->all();
-        return view('posts', compact('posts'));
+        $this->content = view('posts', compact('posts'));
     }
 
     /**
@@ -48,7 +48,7 @@ class PostController
     public function create()
     {
 
-        return view('newpost',[]);
+        $this->content = view('newpost',[]);
     }
     /**
      * @return string

@@ -47,4 +47,9 @@ class Post
 
         return $stm->rowCount();
     }
+
+    public function edit(int $postId)
+    {
+        
+    }
 }

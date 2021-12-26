@@ -58,4 +58,10 @@ class PostController
 
         $this->Post->save($_POST);
     }
+    public function edit($postId)
+    {
+
+        $post = $this->Post->find($postId);
+        $this->content = view('editpost', compact('post'));
+    }
 }

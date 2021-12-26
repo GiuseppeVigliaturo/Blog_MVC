@@ -40,7 +40,7 @@ class PostController
     public function show(int $postid)
     {
         $post = $this->Post->find($postid);
-        return view('post', compact('post'));
+        $this->content =  view('post', compact('post'));
     }
     /**
      * @return string

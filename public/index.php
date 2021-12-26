@@ -16,6 +16,8 @@ try {
 
     
     // $controller = new App\Controllers\PostController($conn);
+
+    //ritorno il postController
     $controller= $router->dispatch();
     $controller->display();
 

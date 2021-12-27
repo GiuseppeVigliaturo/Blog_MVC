@@ -2,31 +2,30 @@
 <h6><?= $post->id ?></h6>
 <div class="row">
     <div class="col-md-6 push-md-3">
-
-
-        <h1>Create new post</h1>
         <form action="/post/<?= $post->id ?>/store" method="POST">
-
+            <input class="form-control" name="id" type="hidden" value="<?= $post->id ?>">
             <div class="form-group">
 
                 <label for="email">Email</label>
-                <input class="form-control" name="email" type="email" name="email" i="email" required>
+                <input class="form-control" name="email" type="email" name="email" id="email" value="<?= $post->email ?>" required>
 
             </div>
             <div class="form-group">
 
                 <label for="title">Title</label>
-                <input name="title" class="form-control" type="text" name="title" i="title" required>
+                <input name="title" class="form-control" type="text" name="title" id="title" value="<?= $post->title ?>" required>
 
             </div>
-            <div class="form-group">
+            <div class=" form-group">
 
                 <label for="title">Message</label>
-                <textarea required name="message" class="form-control" name="message" i="message"></textarea>
+                <textarea required name="message" class="form-control" name="message" id="message">
+                    <?= $post->message ?>
+                </textarea>
 
             </div>
             <div class="form-group text-md-center">
-                <button class="btn  btn-success">Save</button>
+                <button class="btn  btn-success">EDIT</button>
             </div>
         </form>
     </div>

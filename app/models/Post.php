@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use PDO;
+use PDOException;
 
 class Post
 {
@@ -48,8 +49,27 @@ class Post
         return $stm->rowCount();
     }
 
-    public function edit(int $postId)
+    public function store(array $data = [])
     {
+            $sql = 'UPDATE posts SET email= :email, title=:title, message= :message';
+            $sql .= ' WHERE id= :id';
+
+            $stm = $this->conn->prepare($sql);
+            // die(print_r($data));
+            $stm->execute([
+                'id' => $data['id'],
+                'email' => $data['email'],
+                'title' => $data['title'],
+                'message' => $data['message']
+            ]);
+
+            // if ($stm->errorCode()) {
+            //     return $stm->errorInfo();
+            // } else {
+            //     
+            // }
+            return $stm->rowCount();
+        
         
     }
 }

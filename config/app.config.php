@@ -13,6 +13,7 @@ return [
         ],
         'POST' => [
             'post/save' =>  'App\Controllers\PostController@save',
+            'post/:id/store' =>  'App\Controllers\PostController@store',
         ]
     ]
 ];

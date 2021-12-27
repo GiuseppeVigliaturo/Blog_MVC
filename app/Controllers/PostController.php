@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\Post;
 use PDO;
+use PDOException;
 
 class PostController
 {
@@ -57,11 +58,23 @@ class PostController
     {
 
         $this->Post->save($_POST);
+        redirect('/');
     }
     public function edit($postId)
     {
 
         $post = $this->Post->find($postId);
         $this->content = view('editpost', compact('post'));
+    }
+    public function store(string $postId)
+    {
+        try {
+            $this->Post->store($_POST);
+            redirect('/');
+        } catch (PDOException $e) {
+            return $e->getMessage();
+        }
+        
+        
     }
 }

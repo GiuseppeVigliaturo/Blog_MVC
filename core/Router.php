@@ -40,9 +40,9 @@ return $this->processQueue($url, $method);
 protected function route($callback, array $matches=[]){
 try{
 
-if(is_callable($callback)){
-return call_user_func_array($callback, $matches);
-}
+    if(is_callable($callback)){
+    return call_user_func_array($callback, $matches);
+    }
 
 $tokens = explode('@', $callback);
 
@@ -51,17 +51,17 @@ $method = $tokens[1];
 
 $class = new $controller($this->conn);
 
-if(method_exists($class, $method)){
+    if(method_exists($class, $method)){
 
-call_user_func_array([$class, $method], $matches);
-return $class;
-}else{
-throw new Exception('Metodo '.$method.' non trovato nella class '.$controller);
-}
+        call_user_func_array([$class, $method], $matches);
+        return $class;
+    } else{
+        throw new Exception('Metodo '.$method.' non trovato nella classe '.$controller);
+    }
 //$controller = new $class
-} catch(Exception $e){
-die($e->getMessage());
-}
+    } catch(Exception $e){
+    die($e->getMessage());
+    }
 }
 
 protected function processQueue($uri, $method = 'GET')

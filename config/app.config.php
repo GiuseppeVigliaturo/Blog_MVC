@@ -14,6 +14,7 @@ return [
         'POST' => [
             'post/save' =>  'App\Controllers\PostController@save',
             'post/:id/store' =>  'App\Controllers\PostController@store',
+            'post/:id/delete' =>  'App\Controllers\PostController@delete'
         ]
     ]
 ];

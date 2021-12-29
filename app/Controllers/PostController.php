@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\Post;
+
+use App\Models\Comment;
 use PDO;
 use PDOException;
 
@@ -41,7 +43,9 @@ class PostController
     public function show(int $postid)
     {
         $post = $this->Post->find($postid);
-        $this->content =  view('post', compact('post'));
+        $comment = new Comment($this->conn);
+        $comments = $comment->all($postid);
+        $this->content = view('post', compact('post', 'comments'));
     }
     /**
      * @return string

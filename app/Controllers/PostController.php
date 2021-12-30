@@ -2,30 +2,23 @@
 
 namespace App\Controllers;
 
-use App\Models\Post;
-
 use App\Models\Comment;
+use App\Models\Post;
 use PDO;
 use PDOException;
 
-class PostController
+class PostController extends BaseController
 {
-    protected $layout = 'layout/index.tpl.php';
-    public $content = 'Giuseppe Vigliaturo';
-    protected $conn;
+
     protected $Post;
 
     public function __construct(PDO $conn)
     {
-        $this->conn = $conn;
+
+        parent::__construct($conn);
+
         $this->Post = new Post($conn);
     }
-
-    
-
-    /**
-     * @return void
-     */
     public function display()
     {
         require $this->layout;
@@ -64,6 +57,8 @@ class PostController
         $this->Post->save($_POST);
         redirect('/');
     }
+
+
     public function edit($postId)
     {
 
@@ -89,5 +84,13 @@ class PostController
         } catch (PDOException $e) {
             return $e->getMessage();
         }
+    }
+
+    public function saveComment($postid)
+    {
+        $comment = new Comment($this->conn);
+        $_POST['postid']= (int)$postid;
+        $comments = $comment->save($_POST);
+        redirect('/post/'.$postid);
     }
 }

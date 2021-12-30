@@ -25,4 +25,20 @@ class Comment
         $stm->execute();
         return $stm->fetchAll();
     }
+
+    public function save(array $data=[]){
+        $sql = 'INSERT INTO postscomments (email, comment, datecreated, post_id)';
+        $sql .= 'values (:email, :comment,:datecreated, :post_id)';
+
+        $stm = $this->conn->prepare($sql);
+
+        $stm->execute([
+            'email' => $data['email'],
+            'comment' =>  $data['comment'],
+            'datecreated' => date('Y-m-d H:i:s'),
+            'post_id' => $data['postid']
+        ]);
+
+        return $stm->rowCount();
+    }
 }

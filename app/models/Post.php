@@ -15,7 +15,7 @@ class Post
     public  function all()
     {
         $result = [];
-        $sql= 'select * from posts INNER JOIN users ON users.id  = posts.user_id  ORDER BY datecreated DESC';
+        $sql= 'select p.*,u.email from posts as p  INNER JOIN users as u ON u.id  = p.user_id  ORDER BY datecreated DESC';
         $stm = $this->conn->query($sql);
         if ($stm) {
             $result = $stm->fetchAll(PDO::FETCH_OBJ);
@@ -25,7 +25,7 @@ class Post
     public  function find(int $id)
     {
         $result = [];
-        $stm = $this->conn->prepare('select * from posts where id=:id');
+        $stm = $this->conn->prepare('select p.*,u.email from posts as p INNER JOIN users as u ON u.id = p.user_id where p.id=:id');
         $stm->execute(['id' => $id]);
         if ($stm) {
             $result = $stm->fetch(PDO::FETCH_OBJ);

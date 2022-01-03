@@ -61,7 +61,9 @@ class PostController extends BaseController
     public function save()
     {
         $this->redirectIfNotLoggedIn();
-        $this->Post->save($_POST);
+        $data = $_POST;
+        $data['user_id']= getUserId();
+        $this->Post->save($data);
         redirect('/');
     }
 

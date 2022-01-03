@@ -6,12 +6,6 @@
             <input class="form-control" name="id" type="hidden" value="<?= $post->id ?>">
             <div class="form-group">
 
-                <label for="email">Email</label>
-                <input class="form-control" name="email" type="email" name="email" id="email" value="<?= $post->email ?>" required>
-
-            </div>
-            <div class="form-group">
-
                 <label for="title">Title</label>
                 <input name="title" class="form-control" type="text" name="title" id="title" value="<?= $post->title ?>" required>
 

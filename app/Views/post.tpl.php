@@ -1,6 +1,7 @@
 <article>
+    <br><br><br>
     <h1>Il mio post</h1>
-    <?= htmlentities($post->message) ?>
+    <?= htmlentities($post->title) ?>
 </article>
 <form action="/post/<?= $post->id ?>/edit" method="GET">
     <div class="form-group">

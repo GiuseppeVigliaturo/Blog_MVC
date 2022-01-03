@@ -15,7 +15,8 @@ class Post
     public  function all()
     {
         $result = [];
-        $stm = $this->conn->query('select * from posts ORDER BY datecreated DESC');
+        $sql= 'select * from posts INNER JOIN users ON users.id  = posts.user_id  ORDER BY datecreated DESC';
+        $stm = $this->conn->query($sql);
         if ($stm) {
             $result = $stm->fetchAll(PDO::FETCH_OBJ);
         }
@@ -33,13 +34,13 @@ class Post
     }
     public function save(array $data = [])
     {
-        $sql = 'INSERT INTO posts (title, email,message, datecreated)';
-        $sql .= 'values (:title,:email, :message,:datecreated)';
+        $sql = 'INSERT INTO posts (user_id,title,message, datecreated)';
+        $sql .= 'values (:userid,:title,:message,:datecreated)';
 
         $stm = $this->conn->prepare($sql);
 
         $stm->execute([
-            'email' => $data['email'],
+            'userid'=> $data['user_id'],
             'message' =>  $data['message'],
             'title' =>  $data['title'],
             'datecreated' => date('Y-m-d H:i:s')

@@ -4,6 +4,7 @@ foreach ($posts as $post) :
 
 ?>
     <article>
+        <br><br><br><br>
         <h2><a href="/post/<?= $post->id ?>"><?= htmlentities($post->title) ?></a> </h2>
         <?= htmlentities($post->message) ?>
         <p>

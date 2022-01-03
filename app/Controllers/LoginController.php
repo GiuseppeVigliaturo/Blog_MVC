@@ -31,8 +31,10 @@ class LoginController extends BaseController
         $password = $_POST['password'] ?? '';
 
         $result = $this->verifyLogin($email, $password, $token);
+        //die(var_dump($result));
 
         if ($result['success']) {
+            
             session_regenerate_id();
             $_SESSION['loggedin'] = true;
             unset($result['user']['password']);
@@ -95,7 +97,7 @@ class LoginController extends BaseController
             return $result;
         }
         echo password_hash('dedede',PASSWORD_DEFAULT);
-        if (!password_verify($password, $resEmail['password'])) {
+        if (!password_verify($password, $resEmail->password)) {
             $result = [
                 'message' => 'WRONG PASSWORD',
                 'success' => false

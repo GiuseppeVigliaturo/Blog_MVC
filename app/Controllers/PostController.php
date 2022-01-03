@@ -100,8 +100,13 @@ class PostController extends BaseController
     public function saveComment($postid)
     {
         $comment = new Comment($this->conn);
-        $_POST['postid']= (int)$postid;
-        $comments = $comment->save($_POST);
+        $data = $_POST;
+        $data['postid']= (int)$postid;
+        $data['user_id'] = (int)getUserId();
+
+        $comment->save($data);
+
+        // dd('commento salvato');
         redirect('/post/'.$postid);
     }
 }

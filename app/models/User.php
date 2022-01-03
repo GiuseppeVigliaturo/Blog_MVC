@@ -1,6 +1,6 @@
 <?php
 namespace App\Models;
-
+use PDO;
 
 class User
 {
@@ -36,102 +36,100 @@ class User
         return $result;
     }
 
-    function getUserByEmail(string $email)
+    public function getUserByEmail(string $email)
     {
-
-        $conn = $GLOBALS['mysqli'];
         $result = [];
         $email = filter_var($email, FILTER_VALIDATE_EMAIL);
         if (!$email) {
             $result;
         }
-        $email = mysqli_escape_string($conn, $email);
+        $email = $email;
 
-        $sql = "SELECT *  FROM users WHERE email ='$email' ";
-        // echo $sql;
+        $sql = "SELECT *  FROM users WHERE email = :email";
 
-        $res = $conn->query($sql);
-        if ($res && $res->num_rows) {
-            $result = $res->fetch_assoc();
+        $stm = $this->conn->prepare($sql);
+        $stm->execute(['email' => $email]);
+        if ($stm) {
+            $result = $stm->fetch(PDO::FETCH_OBJ);
         }
         return $result;
     }
 
-    function storeUser(array $data, int $id)
-    {
+    // function storeUser(array $data, int $id)
+    // {
 
-        $result = [
-            'success' => 1,
-            'affectedRows' => 0,
-            'error' => ''
-        ];
+    //     $result = [
+    //         'success' => 1,
+    //         'affectedRows' => 0,
+    //         'error' => ''
+    //     ];
 
-        $conn = $GLOBALS['mysqli'];
-        $username = $conn->escape_string($data['username']);
-        $email = $conn->escape_string($data['email']);
-        $fiscalcode = $conn->escape_string($data['fiscalcode']);
-        $avatar = $conn->escape_string($data['avatar']);
+    //     $conn = $GLOBALS['mysqli'];
+    //     $username = $conn->escape_string($data['username']);
+    //     $email = $conn->escape_string($data['email']);
+    //     $fiscalcode = $conn->escape_string($data['fiscalcode']);
+    //     $avatar = $conn->escape_string($data['avatar']);
 
 
-        $age = $conn->escape_string($data['age']);
-        $sql = 'UPDATE users SET ';
-        $sql .= "username='$username', email='$email',fiscalcode='$fiscalcode',";
-        $sql .= "age=$age, avatar = '$avatar'";
-        if ($data['password']) {
+    //     $age = $conn->escape_string($data['age']);
+    //     $sql = 'UPDATE users SET ';
+    //     $sql .= "username='$username', email='$email',fiscalcode='$fiscalcode',";
+    //     $sql .= "age=$age, avatar = '$avatar'";
+    //     if ($data['password']) {
 
-            $data['password'] = $data['password'] ?? 'testuser';
+    //         $data['password'] = $data['password'] ?? 'testuser';
 
-            $password = password_hash($data['password'], PASSWORD_DEFAULT);
-            $sql .= ", password='$password'";
-        }
-        if ($data['roletype']) {
-            $roletype = in_array($data['roletype'], getConfig('roletypes', [])) ? $data['roletype'] : 'user';
-            $sql .= ",roletype='$roletype'";
-        }
-        $sql .= ' WHERE id =' . $id;
-        // print_r($data);
-        // echo $sql;die;
+    //         $password = password_hash($data['password'], PASSWORD_DEFAULT);
+    //         $sql .= ", password='$password'";
+    //     }
+    //     if ($data['roletype']) {
+    //         $roletype = in_array($data['roletype'], getConfig('roletypes', [])) ? $data['roletype'] : 'user';
+    //         $sql .= ",roletype='$roletype'";
+    //     }
+    //     $sql .= ' WHERE id =' . $id;
+    //     // print_r($data);
+    //     // echo $sql;die;
 
-        $res = $conn->query($sql);
-        if ($res) {
-            $result['affectedRows'] = $conn->affected_rows;
-        } else {
-            $result['success'] = false;
-            $result['error'] = $conn->error;
-        }
-        return $result;
-    }
+    //     $res = $conn->query($sql);
+    //     if ($res) {
+    //         $result['affectedRows'] = $conn->affected_rows;
+    //     } else {
+    //         $result['success'] = false;
+    //         $result['error'] = $conn->error;
+    //     }
+    //     return $result;
+    // }
 
-    function saveUser(array $data)
-    {
-        $conn = $GLOBALS['mysqli'];
+    // function saveUser(array $data)
+    // {
+    //     $conn = $GLOBALS['mysqli'];
 
-        $result = [
-            'id' => 0,
-            'success' => false,
-            'message' => 'PROBLEM SAVING USER',
+    //     $result = [
+    //         'id' => 0,
+    //         'success' => false,
+    //         'message' => 'PROBLEM SAVING USER',
 
-        ];
-        $username = $conn->escape_string($data['username']);
-        $email = $conn->escape_string($data['email']);
-        $fiscalcode = $conn->escape_string($data['fiscalcode']);
-        $age = (int)$data['age'];
-        $data['password'] = $data['password'] ?? 'testuser';
-        $password = password_hash($data['password'], PASSWORD_DEFAULT);
-        $roletype = in_array($data['roletype'], getConfig('roletypes', [])) ? $data['roletype'] : 'user';
+    //     ];
+    //     $username = $conn->escape_string($data['username']);
+    //     $email = $conn->escape_string($data['email']);
+    //     $fiscalcode = $conn->escape_string($data['fiscalcode']);
+    //     $age = (int)$data['age'];
+    //     $data['password'] = $data['password'] ?? 'testuser';
+    //     $password = password_hash($data['password'], PASSWORD_DEFAULT);
+    //     $roletype = in_array($data['roletype'], getConfig('roletypes', [])) ? $data['roletype'] : 'user';
 
-        $sql = 'INSERT INTO users (username, email, fiscalcode,age, password, roletype) ';
-        $sql .= " VALUES('$username', '$email','$fiscalcode',$age, '$password','$roletype')";
-        //echo $sql;
-        $res = $conn->query($sql);
-        if ($res && $conn->affected_rows) {
-            $result['id'] = $conn->insert_id;
-            $result['success'] = true;
-        } else {
-            $result['message'] = $conn->error;
-        }
-        return $result;
-    }
+    //     $sql = 'INSERT INTO users (username, email, fiscalcode,age, password, roletype) ';
+    //     $sql .= " VALUES('$username', '$email','$fiscalcode',$age, '$password','$roletype')";
+    //     //echo $sql;
+    //     $res = $conn->query($sql);
+    //     if ($res && $conn->affected_rows) {
+    //         $result['id'] = $conn->insert_id;
+    //         $result['success'] = true;
+    //     } else {
+    //         $result['message'] = $conn->error;
+    //     }
+    //     return $result;
+    // }
 
     function updateUserAvatar(int $id, string $avatar = null)
     {

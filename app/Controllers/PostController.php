@@ -19,6 +19,13 @@ class PostController extends BaseController
 
         $this->Post = new Post($conn);
     }
+
+    private function redirectIfNotLoggedIn()
+    {
+        if (!isUserLoggedin()) {
+            redirect('/auth/login');
+        }
+    }
     public function display()
     {
         require $this->layout;
@@ -45,7 +52,7 @@ class PostController extends BaseController
      */
     public function create()
     {
-
+        $this->redirectIfNotLoggedIn();
         $this->content = view('newpost',[]);
     }
     /**
@@ -53,7 +60,7 @@ class PostController extends BaseController
      */
     public function save()
     {
-
+        $this->redirectIfNotLoggedIn();
         $this->Post->save($_POST);
         redirect('/');
     }
@@ -61,12 +68,13 @@ class PostController extends BaseController
 
     public function edit($postId)
     {
-
+        $this->redirectIfNotLoggedIn();
         $post = $this->Post->find($postId);
         $this->content = view('editpost', compact('post'));
     }
     public function store(string $postId)
     {
+        $this->redirectIfNotLoggedIn();
         try {
             $this->Post->store($_POST);
             redirect('/');
@@ -78,6 +86,7 @@ class PostController extends BaseController
     }
     public function delete($postId)
     {
+        $this->redirectIfNotLoggedIn();
         try {
             $this->Post->delete((int)$postId);
             redirect('/');

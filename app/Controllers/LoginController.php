@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\User;
 class LoginController extends BaseController
 {
     private function generateToken()
@@ -28,12 +29,31 @@ class LoginController extends BaseController
         $token = $_POST['_csrf'] ?? '';
         $email = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
+
+        $result = $this->verifyLogin($email, $password, $token);
+
+        if ($result['success']) {
+            session_regenerate_id();
+            $_SESSION['loggedin'] = true;
+            unset($result['user']['password']);
+            $_SESSION['userData'] = $result['user'];
+            redirect('/');
+        } else {
+            $_SESSION['message'] = $result['message'];
+            redirect('/auth/login');
+        }
+    }
+
+    public function logout()
+    {
+        $_SESSION = [];
+        redirect('/auth/login');
     }
 
     private function verifyLogin($email, $password, $token)
     {
 
-        require_once 'model/User.php';
+        $user = new User($this->conn);
         $result = [
             'message' => 'USERD LOGGED IN',
             'success' => true
@@ -65,7 +85,7 @@ class LoginController extends BaseController
             ];
             return $result;
         }
-        $resEmail = getUserByEmail($email);
+        $resEmail = $user->getUserByEmail($email);
         if (!$resEmail) {
             $result = [
                 'message' => 'USER NOT FOUND',
@@ -74,7 +94,7 @@ class LoginController extends BaseController
             ];
             return $result;
         }
-
+        echo password_hash('dedede',PASSWORD_DEFAULT);
         if (!password_verify($password, $resEmail['password'])) {
             $result = [
                 'message' => 'WRONG PASSWORD',
@@ -83,7 +103,7 @@ class LoginController extends BaseController
             ];
             return $result;
         }
-        $result['user'] = $resEmail;
+        $result['user'] =(array) $resEmail;
         return $result;
     }
 }

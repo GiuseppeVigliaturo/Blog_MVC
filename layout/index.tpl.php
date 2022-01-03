@@ -13,46 +13,67 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-        <a class="navbar-brand" href="#">COMMENTING SYSTEM</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
 
-        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/posts">POSTS</a>
-                </li>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="/">COMMENTING SYSTEM</a>
+        <ul class="nav navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/posts">POSTS</a>
+            </li>
+            <?php if (isUserLoggedin()) : ?>
                 <li class="nav-item">
                     <a class="nav-link" href="/post/create">NEW POST</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                    <div class="dropdown-menu" aria-labelledby="dropdown01">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
+            <?php endif; ?>
+        </ul>
+        <ul class="nav navbar-nav flex-row justify-content-between ml-auto">
+            <?php
+            if (isUserLoggedin()) :
+            ?>
+                <li class="nav-item order-2 order-md-1"><a href="#" class="nav-link" title="settings">
+                        <i class="fa fa-cog fa-fw fa-lg"></i></a></li>
+
+
+
+
+                <li class="nav-link">
+                    <h5> Welcome <?= getUserLoggedInFullname() ?></h5>
+
                 </li>
-            </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-            </form>
-        </div>
+                <li class="m-1">&nbsp;</li>
+
+                <li class="nav-item">
+                    <form class="form" role="form" method="post" action="/auth/logout">
+                        <input type="hidden" name="action" value="logout">
+                        <button class="btn btn-link">LOGOUT</button>
+                    </form>
+                </li>
+
+                </li>
+            <?php
+            else : ?>
+                <li class="nav-link">
+
+                    <a href="/auth/login" class="btn btn-lg btn-success">LOGIN</a>
+
+                </li>
+            <?php
+            endif;
+
+            ?>
+        </ul>
     </nav>
 
-    <main role="main" class="container">
-
-        <h1><?= $this->content?></h1>
-
-    </main><!-- /.container -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="container">
+        <?= $this->content ?>
+    </div>
+    <!-- jQuery first, then Tether, then Bootstrap JS. -->
+    <script src="/js/jquery.js"></script>
+    <script src="/js/tether.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
 </body>
 
 </html>

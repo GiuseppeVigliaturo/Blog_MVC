@@ -1,4 +1,18 @@
 <br><br><br><br>
+
+<?php
+if (!empty($_SESSION['message'])) : ?>
+    <div class="alert alert-danger">
+        <?php
+        echo htmlentities($_SESSION['message']);
+
+        $_SESSION['message'] = '';
+        ?>
+    </div>
+
+<?php
+endif;
+?>
 <div class='row'>
     <div class='col-md-6 offset-3'>
         <h1><?= $signup ? 'SIGN UP' : 'SIGN IN' ?> </h1>

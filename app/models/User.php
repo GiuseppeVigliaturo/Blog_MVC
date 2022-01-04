@@ -100,36 +100,41 @@ class User
     //     return $result;
     // }
 
-    // function saveUser(array $data)
-    // {
-    //     $conn = $GLOBALS['mysqli'];
+    function saveUser(array $data)
+    {
+        $result = [
+            'id' => 0,
+            'success' => false,
+            'message' => 'PROBLEM SAVING USER',
 
-    //     $result = [
-    //         'id' => 0,
-    //         'success' => false,
-    //         'message' => 'PROBLEM SAVING USER',
+        ];
 
-    //     ];
-    //     $username = $conn->escape_string($data['username']);
-    //     $email = $conn->escape_string($data['email']);
-    //     $fiscalcode = $conn->escape_string($data['fiscalcode']);
-    //     $age = (int)$data['age'];
-    //     $data['password'] = $data['password'] ?? 'testuser';
-    //     $password = password_hash($data['password'], PASSWORD_DEFAULT);
-    //     $roletype = in_array($data['roletype'], getConfig('roletypes', [])) ? $data['roletype'] : 'user';
+        $sql = 'INSERT INTO users (username, email, password, roletype) ';
+        $sql .= " VALUES(:username, :email,:password, :roletype)";
+        //echo $sql;
+        $stm = $this->conn->prepare($sql);
 
-    //     $sql = 'INSERT INTO users (username, email, fiscalcode,age, password, roletype) ';
-    //     $sql .= " VALUES('$username', '$email','$fiscalcode',$age, '$password','$roletype')";
-    //     //echo $sql;
-    //     $res = $conn->query($sql);
-    //     if ($res && $conn->affected_rows) {
-    //         $result['id'] = $conn->insert_id;
-    //         $result['success'] = true;
-    //     } else {
-    //         $result['message'] = $conn->error;
-    //     }
-    //     return $result;
-    // }
+        if ($stm) {
+            $res = $stm->execute([
+                'username' => $data['username'],
+                'email' => $data['email'],
+                'password' => $data['password'],
+                'roletype' => $data['roletype'] ?? 'user',
+
+            ]);
+
+            if ($res) {
+                $result['success'] = 1;
+                $res['id'] = $this->conn->lastInsertId();
+            } else {
+                $result['success'] = $this->conn->errorInfo();
+            }
+        } else {
+            $result['message'] = $this->conn->errorInfo();
+        }
+        
+        return $result;
+    }
 
     function updateUserAvatar(int $id, string $avatar = null)
     {

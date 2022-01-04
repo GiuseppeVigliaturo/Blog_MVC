@@ -57,7 +57,8 @@
             else : ?>
                 <li class="nav-link">
 
-                    <a href="/auth/login" class="btn btn-lg btn-success">LOGIN</a>
+                    <a href="/auth/login" class="btn btn-lg btn-primary">LOGIN</a>
+                    <a href="/auth/signup" class="btn btn-lg btn-success">SIGN UP</a>
 
                 </li>
             <?php

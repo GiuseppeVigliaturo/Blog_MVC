@@ -16,12 +16,20 @@ class LoginController extends BaseController
 
     public function showLogin()
     {
-        $this->content = view('login', ['token'=> $this->generateToken()]);
-    }
 
+        $this->content = view('login', [
+            'token' => $this->generateToken(),
+            'signup' => 0
+        ]);
+    }
     public function showSignup()
     {
-        $this->content = view('signup', []);
+        $this->content = view('login',
+            [
+                'token' => $this->generateToken(),
+                'signup' => 1
+            ]
+        );
     }
 
     public function login()

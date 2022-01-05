@@ -16,7 +16,7 @@ endif;
 <div class='row'>
     <div class='col-md-6 offset-3'>
         <h1><?= $signup ? 'SIGN UP' : 'SIGN IN' ?> </h1>
-        <form action=<?= $signup ? 'auth/signup' : 'auth/login' ?> method='POST'>
+        <form id='loginform' action=<?= $signup ? '/auth/signup' : '/auth/login' ?> method='POST'>
 
             <input type="hidden" name='_csrf' value="<?= $token ?>">
 
@@ -43,3 +43,38 @@ endif;
         </form>
     </div>
 </div>
+
+<script>
+    $(function() {
+            $('#loginform').on('submit', function(evt) {
+                //alert('invio tramite form');
+                evt.preventDefault();
+                const data = $(this).serialize();
+
+                $.ajax({
+                    method: 'post',
+                    data: data,
+                    url: $(this).attr('action'),
+
+                    success: function(response) {
+                        
+                        const data = JSON.parse(response);
+                        console.log('post parse');
+                        if (data) {
+                            //alert(data.message);
+                            if (data.success) {
+                                alert('USER LOGGED IN');
+                                location.href = '/';
+
+                            }
+                        }
+
+                    },
+                    failure: function() {
+                        alert('PROBLEM CONTACTING SERVER')
+                    },
+                })
+            })
+        }
+    );
+</script>

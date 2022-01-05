@@ -35,59 +35,68 @@ class LoginController extends BaseController
     public function login()
     {
         $token = $_POST['_csrf'] ?? '';
-        $email = $_POST['email'] ?? '';
+        $email  = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
-
         $result = $this->verifyLogin($email, $password, $token);
-        //die(var_dump($result));
 
+        $header = strtoupper($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '');
         if ($result['success']) {
-            
+
             session_regenerate_id();
             $_SESSION['loggedin'] = true;
             unset($result['user']['password']);
-            $_SESSION['userData'] = $result['user'];
-            redirect('/');
+            $_SESSION['userData']  = $result['user'];
         } else {
             $_SESSION['message'] = $result['message'];
-            redirect('/auth/login');
+        }
+        if ($header === 'XMLHTTPREQUEST') {
+            ob_end_clean();
+            echo json_encode($result);
+            exit;
+        } else {
+            $result['success'] ?    redirect('/') :   redirect('/auth/login');
         }
     }
 
     public function signup()
     {
         $token = $_POST['_csrf'] ?? '';
-        $email = $_POST['email'] ?? '';
+        $email  = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
         $username = $_POST['username'] ?? '';
-
         $result = $this->verifySignup($email, $password, $token);
-        //die(var_dump($result));
+
+        $header = strtoupper($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '');
 
         if ($result['success']) {
 
             $user = new User($this->conn);
-            $data['email']= $email;
-            $data['username'] = $username;
-            $data['password'] = password_hash($password,PASSWORD_DEFAULT);
-            $resultSave = $user->saveUser($data);
 
-            if ($resultSave['success']) {
+            $data['email']  = $email;
+            $data['username']  = $email;
+            $data['password']  = password_hash($password, PASSWORD_DEFAULT);
 
-                $data['id'] = $resultSave['id'];
+            $result = $user->saveUser($data);
+            //dd($resultSave);
+            if ($result['success']) {
+                $data['id'] = $result['id'];
                 session_regenerate_id();
+
                 $_SESSION['loggedin'] = true;
                 unset($data['password']);
-                $_SESSION['userData'] = $result['user'];
-                redirect('/');
-            } else {
-                $_SESSION['message'] = $resultSave['message'];
-                redirect('/auth/showSignup');
+                $_SESSION['userData'] = $data;
             }
+        }
 
+        if ($header === 'XMLHTTPREQUEST') {
+            ob_end_clean();
+            echo json_encode($result);
+            exit;
         } else {
-            $_SESSION['message'] = $result['message'];
-            redirect('/auth/login');
+            if (!$result['success']) {
+                $_SESSION['message'] = $result['message'];
+            }
+            $result['success'] ? redirect('/') :   redirect('/auth/signup');
         }
     }
 
